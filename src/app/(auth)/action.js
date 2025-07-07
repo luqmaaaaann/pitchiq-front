@@ -55,10 +55,6 @@ export async function registerAction(_, formData) {
     return { error: "Nama, email, dan password dibutuhkan" };
   }
 
-  if (password.length < 8) {
-    return { error: "Password harus minimal 8 karakter" };
-  }
-
   const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
