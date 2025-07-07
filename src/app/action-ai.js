@@ -1,16 +1,46 @@
 "use server";
 
 import { openai } from "@/utils/openai";
+import prisma from "@/lib/prisma";
+import { createDeck } from "../services/deck"; // koreksi path jika perlu
 
 export async function analyzePdfAction(formData) {
   try {
-    console.log("🔍 Start analyzePdfAction");
+    console.log("🚀 Start analyzePdfAction");
 
     const file = formData.get("file");
+    const startupName = formData.get("startupName");
+    const industry = formData.get("industry");
+
+    console.log("📥 Received form data:", {
+      fileName: file?.name,
+      startupName,
+      industry,
+    });
+
     if (!file) {
-      console.log("🚫 No file found in formData");
-      return;
+      console.log("🚫 No file uploaded");
+      return "Gagal: File tidak ditemukan.";
     }
+
+    const fileName = file.name;
+    const filePath = `/uploads/${fileName}`;
+    console.log("📝 Creating deck in database...");
+    const newDeck = await createDeck("cmct87hch0000qpoz4as12ynq", {
+      fileName,
+      filePath,
+      startupName,
+      industry,
+      summary: "",
+    });
+
+    console.log("📦 Deck created:", newDeck.id);
+
+    console.log("🔄 Updating status to PROCESSING...");
+    await prisma.deck.update({
+      where: { id: newDeck.id },
+      data: { status: "PROCESSING" },
+    });
 
     console.log("📤 Uploading file to OpenAI...");
     const uploadedFile = await openai.files.create({
@@ -18,9 +48,9 @@ export async function analyzePdfAction(formData) {
       purpose: "user_data",
     });
 
-    console.log("✅ File uploaded:", uploadedFile.id);
+    console.log("✅ File uploaded to OpenAI:", uploadedFile.id);
 
-    console.log("💬 Creating analysis request...");
+    console.log("🧠 Sending prompt to OpenAI for analysis...");
     const response = await openai.responses.create({
       model: "gpt-4.1",
       input: [
@@ -50,8 +80,29 @@ Jawabanmu harus dalam bahasa Indonesia.`,
       ],
     });
 
-    console.log("📝 Analysis result:", response.output_text);
+    const summary = response.output_text || "❗️ Tidak ada hasil dari AI.";
+    console.log("📝 AI Summary received:");
+
+    console.log("💾 Updating deck with summary and COMPLETED status...");
+    await prisma.deck.update({
+      where: { id: newDeck.id },
+      data: {
+        summary,
+        status: "COMPLETED",
+      },
+    });
+
+    console.log("✅ Analysis completed and saved to DB.");
+    return summary;
   } catch (error) {
     console.error("❌ Error in analyzePdfAction:", error);
+
+    console.log("⚠️ Updating all PROCESSING decks to FAILED (fallback)...");
+    await prisma.deck.updateMany({
+      where: { status: "PROCESSING" },
+      data: { status: "FAILED" },
+    });
+
+    return "Terjadi kesalahan saat memproses pitch deck.";
   }
 }
