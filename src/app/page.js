@@ -1,9 +1,9 @@
 "use client";
-import Footer from "./(auth)/components/footer";
-import Hero from "./(auth)/components/hero";
-import Guide from "./(auth)/components/guide";
-import Features from "./(auth)/components/features";
-import Pricing from "./(auth)/components/pricing";
+import Footer from "./(auth)/_components/footer";
+import Hero from "./(auth)/_components/hero";
+import Guide from "./(auth)/_components/guide";
+import Features from "./(auth)/_components/features";
+import Pricing from "./(auth)/_components/pricing";
 
 export default function Home() {
   return (

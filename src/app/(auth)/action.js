@@ -12,7 +12,7 @@ import { redirect } from "next/navigation";
 import { google } from "@/lib/arctic";
 import * as arctic from "arctic";
 
-export async function loginAction(_, formData) {
+export async function loginAction(formData) {
   const cookieStore = await cookies();
 
   const email = formData.get("email");
@@ -46,7 +46,7 @@ export async function loginAction(_, formData) {
   redirect("/dashboard");
 }
 
-export async function registerAction(_, formData) {
+export async function registerAction(formData) {
   const name = formData.get("name");
   const email = formData.get("email");
   const password = formData.get("password");

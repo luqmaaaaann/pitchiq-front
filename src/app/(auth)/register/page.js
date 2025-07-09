@@ -10,6 +10,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { registerAction } from "@/app/(auth)/action";
+import GoogleButton from "../_components/social-login";
 
 export default async function Page() {
   return (
@@ -25,15 +27,22 @@ export default async function Page() {
           </CardAction>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
+          <form action={registerAction}>
+            <div className="flex flex-col gap-6 mb-4">
+              <div className="grid gap-2 ">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" type="text" placeholder="John Doe" required />
+                <Input
+                  name="name"
+                  id="name"
+                  type="text"
+                  placeholder="John Doe"
+                  required
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
+                  name="email"
                   id="email"
                   type="email"
                   placeholder="m@example.com"
@@ -44,19 +53,15 @@ export default async function Page() {
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                 </div>
-                <Input id="password" type="password" required />
+                <Input name="password" id="password" type="password" required />
               </div>
             </div>
+            <Button type="submit" className="w-full mb-2">
+              Register
+            </Button>
           </form>
+          <GoogleButton className="w-full mt-4" />
         </CardContent>
-        <CardFooter className="flex-col gap-2 mt-4">
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
-          <Button variant="outline" className="w-full">
-            Login with Google
-          </Button>
-        </CardFooter>
       </Card>
     </section>
   );
