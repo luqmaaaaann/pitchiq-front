@@ -7,31 +7,60 @@ import { createAnalysis } from "../../services/analysis";
 import { s3Client } from "@/lib/r2";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
-export async function analyzePdfAction(formData) {
-  let newDeck = null;
+export async function analyzePdfAction(formData, deckId = null) {
+  let deck = null;
 
   try {
-    const file = formData.get("file");
     const startupName = formData.get("startupName");
     const industry = formData.get("industry");
     const summaryInput = formData.get("summary");
 
-    if (!file) {
-      console.log("🚫 No file uploaded");
-      return "Gagal: File tidak ditemukan.";
+    let file, fileName, filePath;
+
+    if (deckId) {
+      // ✏️ EDIT MODE
+      console.log("✏️ Edit mode - Fetching existing deck...");
+      deck = await prisma.deck.findUnique({ where: { id: deckId } });
+
+      if (!deck) throw new Error("Deck not found.");
+
+      fileName = deck.fileName;
+      filePath = deck.filePath;
+      file = await fetch(deck.filePath).then((res) => res.blob());
+
+      // Update deck jadi PROCESSING (ulangin AI)
+      await prisma.deck.update({
+        where: { id: deckId },
+        data: {
+          status: "PROCESSING",
+          startupName,
+          industry,
+          summary: summaryInput,
+        },
+      });
+    } else {
+      // ➕ CREATE MODE
+      file = formData.get("file");
+
+      if (!file) {
+        console.log("🚫 No file uploaded");
+        return "Gagal: File tidak ditemukan.";
+      }
+
+      const r2Result = await uploadToR2(file);
+      fileName = r2Result.uniqueFileName;
+      filePath = r2Result.path;
+
+      console.log("📝 Creating new deck (status: PROCESSING)...");
+      deck = await createDeck("cmct87hch0000qpoz4as12ynq", {
+        fileName,
+        filePath,
+        startupName,
+        industry,
+        summary: summaryInput,
+        status: "PROCESSING",
+      });
     }
-
-    const { path: filePath, uniqueFileName: fileName } = await uploadToR2(file);
-
-    console.log("📝 Creating deck in database (status: PROCESSING)...");
-    newDeck = await createDeck("cmct87hch0000qpoz4as12ynq", {
-      fileName,
-      filePath,
-      startupName,
-      industry,
-      summary: summaryInput,
-      status: "PROCESSING",
-    });
 
     console.log("📤 Uploading file to OpenAI...");
     const uploadedFile = await openai.files.create({
@@ -73,7 +102,7 @@ Please evaluate the uploaded pitch deck based on the following 6 criteria:
 Return only a **valid JSON** object in the following format:
 
 {
-  "overallScore": 1-10, // Integer score between 1 and 10
+  "overallScore": 1-10,
   "summary": "Tuliskan ringkasan evaluasi dalam bahasa Indonesia dengan format Markdown. Gunakan bullet list jika perlu."
 }
 
@@ -99,14 +128,20 @@ Important:
 
     console.log("✅ Parsed AI response:", parsed);
 
+    // ⛔ Delete old analysis if exists (untuk edit)
+    await prisma.analysis.deleteMany({
+      where: { deckId: deck.id },
+    });
+
+    // ✅ Create new analysis
     await createAnalysis({
-      deckId: newDeck.id,
+      deckId: deck.id,
       overallScore,
       response: parsed,
     });
 
     await prisma.deck.update({
-      where: { id: newDeck.id },
+      where: { id: deck.id },
       data: { status: "COMPLETED" },
     });
 
@@ -115,9 +150,9 @@ Important:
   } catch (error) {
     console.error("❌ Error in analyzePdfAction:", error);
 
-    if (newDeck?.id) {
+    if (deck?.id) {
       await prisma.deck.update({
-        where: { id: newDeck.id },
+        where: { id: deck.id },
         data: { status: "FAILED" },
       });
     }
