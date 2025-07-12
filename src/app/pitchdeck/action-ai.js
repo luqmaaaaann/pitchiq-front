@@ -7,6 +7,8 @@ import { createAnalysis } from "../../services/analysis";
 import { s3Client } from "@/lib/r2";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { analyzeAiTask } from "@/trigger/tasks";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function analyzePdfAction(formData, deckId = null) {
   let deck = null;
@@ -63,9 +65,12 @@ export async function analyzePdfAction(formData, deckId = null) {
       summaryInput,
     });
 
-    console.log("response final", response);
+    revalidatePath("/pitchdeck");
 
-    return response;
+    redirect("/pitchdeck");
+    // console.log("response final", response);
+
+    // return response;
   } catch (error) {
     console.error(" Error in analyzePdfAction:", error);
     if (deck?.id) {
