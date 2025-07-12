@@ -3,7 +3,10 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <div className="min-h-screen font-main flex flex-col justify-center items-center bg-[radial-gradient(circle_at_bottom_left,_rgba(96,165,250,0.9),_transparent_44%)] text-center px-4">
+    <section
+      id="home"
+      className="scroll-mt-32 min-h-screen font-main flex flex-col justify-center items-center bg-[radial-gradient(circle_at_bottom_left,_rgba(96,165,250,0.9),_transparent_44%)] text-center px-4"
+    >
       <h1 className="text-7xl font-bold md:text-7xl tracking-tight text-black py-2">
         <div>
           <span className="text-blue-600">Analyze</span> your Pitchdeck
@@ -17,11 +20,11 @@ export default function Hero() {
         gives you clear guidance to refine your message, strengthen your vision,
         and pitch with confidence.
       </p>
-      <Link href="/" className="mt-14 mx-4">
-        <Button className="gap-2 px-12 py-6 min-w-[160px] text-base md:text-lg font-medium rounded-full bg-black shadow-lg me-2 mb-2 hover:scale-105 hover:bg-black">
+      <Link href="/register" className="mt-14 mx-4">
+        <Button className="gap-2 px-12 py-6 min-w-[160px] text-base md:text-lg font-medium rounded-full bg-black shadow-lg hover:scale-105 hover:bg-black hover:cursor-pointer">
           Get Started
         </Button>
       </Link>
-    </div>
+    </section>
   );
 }

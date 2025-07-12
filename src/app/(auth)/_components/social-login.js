@@ -5,7 +5,11 @@ import React from "react";
 export default function GoogleButton() {
   return (
     <form action={googleLoginAction}>
-      <Button variant="outline" type="submit" className="w-full">
+      <Button
+        variant="outline"
+        type="submit"
+        className="w-full py-4 cursor-pointer rounded-full"
+      >
         Continue With Google
       </Button>
     </form>

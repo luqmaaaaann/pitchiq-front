@@ -1,7 +1,6 @@
 "use client";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -12,24 +11,22 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { loginAction } from "@/app/(auth)/action";
 import GoogleButton from "../_components/social-login";
+import Link from "next/link";
 
 export default function Page() {
   return (
-    <section className="min-h-screen font-main flex items-center justify-center bg-[radial-gradient(circle_at_bottom_left,_rgba(96,165,250,0.9),_transparent_44%)]">
-      <Card className="w-full flex max-w-sm">
+    <section className="min-h-screen font-main flex flex-col items-center justify-center bg-[radial-gradient(circle_at_bottom_left,_rgba(96,165,250,0.9),_transparent_44%)]">
+      <Card className="w-full flex max-w-sm py-6">
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
+          <CardTitle className="leading-6 font-semibold">Login</CardTitle>
+          <CardDescription className="mb-2 font-normal text-gray-500">
+            Enter your email below to login to your account.
           </CardDescription>
-          <CardAction>
-            <Button variant="link">Sign Up</Button>
-          </CardAction>
         </CardHeader>
         <CardContent>
           <form action={loginAction}>
-            <div className="flex flex-col gap-6 mb-4">
-              <div className="grid gap-2">
+            <div className="flex flex-col gap-2 mb-8">
+              <div className="grid gap-2 mb-4">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   name="email"
@@ -42,23 +39,39 @@ export default function Page() {
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
                 </div>
                 <Input name="password" id="password" type="password" required />
               </div>
+              <div className="grid text-left">
+                <a
+                  href="#"
+                  className="inline-block text-sm text-gray-500 hover:text-black"
+                >
+                  Forgot your password?
+                </a>
+              </div>
             </div>
-            <Button type="submit" className="w-full mb-2">
+            <Button
+              type="submit"
+              className=" w-full mb-2 py-4 cursor-pointer text-white bg-blue-600 rounded-full shadow hover:bg-blue-800 transition"
+            >
               Login
             </Button>
           </form>
           <GoogleButton className="w-full mt-4" />
         </CardContent>
       </Card>
+      <div className="flex justify-center items-center text-center mt-4 leading-5">
+        <p className="text-sm font-normal text-gray-500">
+          Dont have an account?{" "}
+          <Link
+            href="/register"
+            className="text-gray-500 hover:font-semibold hover:text-blue-500"
+          >
+            Sign up
+          </Link>
+        </p>
+      </div>
     </section>
   );
 }
