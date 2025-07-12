@@ -19,7 +19,7 @@ export const metadata = {
     "software development",
     "automated analysis",
   ],
-  title: "Pitchdeck Evaluator - AI Pitch Deck Analyzer",
+  title: "PitchIQ - AI Pitch Deck Analyzer",
   description: "Analyze your pitch deck into software with a click",
 };
 
