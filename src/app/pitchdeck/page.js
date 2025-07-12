@@ -24,41 +24,59 @@ export default function Home() {
   return (
     <div>
       <main className="max-w-2xl m-auto my-12">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block">Startup Name</label>
-            <input
-              name="startupName"
-              type="text"
-              required
-              className="border w-full p-2"
-            />
-          </div>
-          <div>
-            <label className="block">Industry</label>
-            <input
-              name="industry"
-              type="text"
-              required
-              className="border w-full p-2"
-            />
-          </div>
-          <div>
-            <label className="block">Pitch Deck (PDF)</label>
-            <input name="file" type="file" accept=".pdf" required />
-          </div>
-          <div>
-            <label className="block">Summary</label>
-            <textarea name="summary" rows="4" cols="50"></textarea>
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-blue-500 text-white px-4 py-2"
-          >
-            {loading ? "Processing..." : "Start Process"}
-          </button>
-        </form>
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+          <h1 className="text-2xl font-bold mb-6">Isi Keterangan Deck</h1>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block font-2xl text-gray-700">
+                Startup Name
+              </label>
+              <input
+                name="startupName"
+                type="text"
+                required
+                className="border w-full p-2 rounded-md border-gray-600"
+              />
+            </div>
+            <div>
+              <label className="block font-2xl text-gray-700">Industry</label>
+              <input
+                name="industry"
+                type="text"
+                required
+                className="border w-full p-2 rounded-md border-gray-600"
+              />
+            </div>
+            <div>
+              <label className="block font-2xl text-gray-700">
+                Pitch Deck (PDF)
+              </label>
+              <input
+                name="file"
+                type="file"
+                accept=".pdf"
+                required
+                className="border w-full p-2 rounded-md border-gray-600"
+              />
+            </div>
+            <div>
+              <label className="block font-2xl text-gray-700">Summary</label>
+              <textarea
+                name="summary"
+                rows="4"
+                cols="50"
+                className="border w-full p-2 rounded-md border-gray-600"
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md"
+            >
+              {loading ? "Processing..." : "Start Process"}
+            </button>
+          </form>
+        </div>
 
         {/* {summary && (
           <div className="p-4 rounded">
