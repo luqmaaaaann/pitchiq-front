@@ -13,7 +13,6 @@ export default function PDFViewer({ fileUrl }) {
   useEffect(() => {
     setIsClient(true);
     
-    // Dynamic import react-pdf setelah component mount
     import('react-pdf').then(({ pdfjs, Document, Page }) => {
       pdfjs.GlobalWorkerOptions.workerSrc = new URL(
         'pdfjs-dist/build/pdf.worker.min.mjs',
