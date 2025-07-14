@@ -7,16 +7,14 @@ import PDFViewer from "./PDFViewer";
 import Link from "next/link";
 
 const page = async ({ params }) => {
+  const { id } = await params;
+
   const session = await getCurrentSession();
   if (!session) {
     redirect("/login");
   }
 
-  const { id } = await params;
-
   const deck = await getDeckById(id, session.user.id);
-
-  // console.log(deck.filePath);
 
   return (
     <div className="p-12">
@@ -39,25 +37,19 @@ const page = async ({ params }) => {
           Back to Dashboard
         </Link>
       </div>
-      <div className="grid grid-cols-2 gap-4 bg-white min-h-screen">
-        <div className="col-span-1 bg-gray-100 rounded-lg p-6">
-          <PDFViewer fileUrl={deck.filePath} />
+      <div className="grid grid-cols-2 gap-6 min-h-screen">
+        {/* PDF Section */}
+        <div className="col-span-1 flex justify-center">
+          <div className="w-full bg-white rounded-xl shadow-lg border border-gray-200 p-4 max-h-[100vh] overflow-y-auto">
+            <PDFViewer
+              fileUrl={`/api/pdf-proxy?url=${encodeURIComponent(
+                deck.filePath
+              )}`}
+            />
+          </div>
         </div>
-        {/* Header Section */}
-        {/* <div className="col-span-1 mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Pitch Analysis
-        </h1>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600">Overall Score:</span>
-          <span className="text-2xl font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-lg">
-            {deck.analysis.overallScore}/10
-          </span>
-        </div>
-      </div> */}
-
         {/* Analysis Content */}
-        <div className="bg-gray-100 rounded-lg p-6 col-span-1">
+        <div className="bg-gray-100 rounded-lg p-6 col-span-1 max-h-[100vh] overflow-y-auto">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
             Analysis Summary
           </h2>

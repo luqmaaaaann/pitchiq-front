@@ -7,10 +7,12 @@ import { createAnalysis } from "../../services/analysis";
 import { s3Client } from "@/lib/r2";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { analyzeAiTask } from "@/trigger/tasks";
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { getCurrentSession } from "@/services/auth";
 
 export async function analyzePdfAction(formData, deckId = null) {
+  const session = await getCurrentSession();
+
   let deck = null;
 
   try {
@@ -45,7 +47,7 @@ export async function analyzePdfAction(formData, deckId = null) {
       fileName = uniqueFileName;
       filePath = path;
 
-      deck = await createDeck("cmct87hch0000qpoz4as12ynq", {
+      deck = await createDeck(session.user.id, {
         fileName,
         filePath,
         startupName,
@@ -65,12 +67,10 @@ export async function analyzePdfAction(formData, deckId = null) {
       summaryInput,
     });
 
-    revalidatePath("/pitchdeck");
+    revalidatePath("/dashboard");
 
-    redirect("/pitchdeck");
-    // console.log("response final", response);
-
-    // return response;
+    console.log("response final", response);
+    return response;
   } catch (error) {
     console.error(" Error in analyzePdfAction:", error);
     if (deck?.id) {

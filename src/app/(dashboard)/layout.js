@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { logoutAction } from "../(auth)/action";
 
 export default function Layout({ children }) {
   return (
@@ -56,15 +57,15 @@ export default function Layout({ children }) {
                 <AlertDialogCancel className="cursor-pointer">
                   Cancel
                 </AlertDialogCancel>
-                <Link href="/">
-                  {" "}
+                <form action={logoutAction}>
                   <Button
                     variant="outline"
                     className="bg-blue-600 hover:bg-blue-800 hover:text-white text-white cursor-pointer"
                   >
                     Logout
                   </Button>
-                </Link>
+                </form>
+                {/* <Link href="/"> </Link> */}
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
