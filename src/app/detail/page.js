@@ -42,7 +42,9 @@ const page = async () => {
       </div>
       <div className="grid grid-cols-2 gap-4 bg-white min-h-screen">
         <div className="col-span-1 bg-gray-100 rounded-lg p-6">
-          <PDFViewer fileUrl={deck.filePath} />
+          <PDFViewer
+            fileUrl={`/api/pdf-proxy?url=${encodeURIComponent(deck.filePath)}`}
+          />
         </div>
         {/* Header Section */}
         {/* <div className="col-span-1 mb-8">
