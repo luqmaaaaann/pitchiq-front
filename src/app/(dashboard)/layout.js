@@ -70,7 +70,7 @@ export default function Layout({ children }) {
           </AlertDialog>
         </div>
       </aside>
-      <section className="flex-1 p-5">{children}</section>
+      <section className="flex-1 p-18">{children}</section>
     </main>
   );
 }

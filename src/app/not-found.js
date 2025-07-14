@@ -13,7 +13,7 @@ export default function NotFound() {
         moved. Please double-check the URL or return to the homepage.
       </p>
       <Link href="/" className="mt-8 mx-4">
-        <Button className="gap-2 px-12 py-6 min-w-[160px] text-base md:text-lg font-medium cursor-pointer rounded-full bg-black shadow-lg me-2 mb-2">
+        <Button className="gap-2 px-12 py-6 min-w-[160px] text-base md:text-lg font-medium cursor-pointer rounded-full bg-black shadow-lg">
           <CircleArrowLeft size={28} />
           Home
         </Button>
