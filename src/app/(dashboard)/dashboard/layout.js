@@ -4,7 +4,7 @@ import DashboardPage from "./dashboard-page";
 export default function Layout({ children }) {
   return (
     <div>
-      <DashboardPage />
+      {/* <DashboardPage /> */}
       <div>{children}</div>
     </div>
   );

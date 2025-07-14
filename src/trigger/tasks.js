@@ -25,8 +25,6 @@ export const analyzeAiTask = task({
         purpose: "user_data",
       });
 
-
- 
       const aiResponse = await openai.responses.create({
         model: "gpt-4.1",
         input: [
