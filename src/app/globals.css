@@ -120,3 +120,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Disable text selection di PDF */
+.react-pdf__Page {
+  user-select: none !important;
+}
+
+.react-pdf__Page__textContent {
+  display: none !important;
+}
+
+/* Disable context menu (right click) di PDF */
+.react-pdf__Page canvas {
+  pointer-events: none;
+}
