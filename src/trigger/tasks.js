@@ -62,7 +62,11 @@ Return only JSON:
         ],
       });
 
-      const raw = aiResponse.output_text || "{}";
+      let raw = aiResponse.output_text || "{}";
+      raw = raw
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
       const parsed = JSON.parse(raw);
       const overallScore = parseInt(parsed.overallScore);
 
