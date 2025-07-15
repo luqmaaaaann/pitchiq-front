@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Edit } from "lucide-react";
+import { toast } from "sonner";
 
 export default function EditDeckDialog({ deck }) {
   const [open, setOpen] = useState(false);
@@ -23,23 +24,23 @@ export default function EditDeckDialog({ deck }) {
 
   async function handleSubmit(formData) {
     setLoading(true);
-    
+
     const result = await updateDeckAction(deck.id, formData);
-    
+
     if (result.success) {
       setOpen(false);
-      // You could show a toast notification here if you have one
+      toast.success("Deck updated successfully!");
     } else {
-      alert("Gagal update deck: " + result.error);
+      toast.error("Failed to update deck: " + result.error);
     }
-    
+
     setLoading(false);
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="cursor-pointer">
           <Edit className="h-4 w-4 mr-1" />
           Edit
         </Button>
@@ -83,15 +84,20 @@ export default function EditDeckDialog({ deck }) {
             </div>
           </div>
           <DialogFooter>
-            <Button 
-              type="button" 
-              variant="outline" 
+            <Button
+              className="cursor-pointer"
+              type="button"
+              variant="outline"
               onClick={() => setOpen(false)}
               disabled={loading}
             >
               Cancel
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white" type="submit" disabled={loading}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+              type="submit"
+              disabled={loading}
+            >
               {loading ? "Updating..." : "Update Deck"}
             </Button>
           </DialogFooter>
@@ -100,4 +106,3 @@ export default function EditDeckDialog({ deck }) {
     </Dialog>
   );
 }
-
