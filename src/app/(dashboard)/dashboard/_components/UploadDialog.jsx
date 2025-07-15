@@ -35,16 +35,20 @@ export default function UploadDialog() {
     "Other"
   ];
 
-  const handleFileChange = (e) => {
+  async function handleFileChange(e) {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const result = await analyzePdfAction(formData);
     console.log(result);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 700);
   }
 
   return (
@@ -65,7 +69,6 @@ export default function UploadDialog() {
           </DialogHeader>
           
           <div className="grid gap-6 py-4">
-            {/* Startup Name */}
             <div className="grid gap-2">
               <Label htmlFor="startupName" className="text-sm font-medium">
                 Startup Name *
@@ -80,7 +83,6 @@ export default function UploadDialog() {
               />
             </div>
 
-            {/* Industry */}
             <div className="grid gap-2">
               <Label htmlFor="industry" className="text-sm font-medium">
                 Industry *
@@ -93,7 +95,6 @@ export default function UploadDialog() {
               </select>
             </div>
 
-            {/* Startup Summary */}
             <div className="grid gap-2">
               <Label htmlFor="summary" className="text-sm font-medium">
                 Startup Summary *
@@ -107,7 +108,6 @@ export default function UploadDialog() {
               />
             </div>
 
-            {/* File Upload */}
             <div className="grid gap-2">
               <Label className="text-sm font-medium">
                 Pitchdeck File *

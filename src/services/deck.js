@@ -53,7 +53,24 @@ export async function deleteDeck(deckId, userId) {
     throw new Error("Deck not found");
   }
 
+  await prisma.analysis.deleteMany({ where: { deckId } });
+
   return await prisma.deck.delete({
     where: { id: deckId },
+  });
+}
+
+export async function updateDeck(deckId, userId, deckData) {
+  const deck = await prisma.deck.findFirst({
+    where: { id: deckId, userId },
+  });
+
+  if (!deck) {
+    throw new Error("Deck not found");
+  }
+
+  return await prisma.deck.update({
+    where: { id: deckId },
+    data: deckData,
   });
 }

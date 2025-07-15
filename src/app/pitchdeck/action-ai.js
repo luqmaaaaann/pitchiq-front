@@ -23,7 +23,6 @@ export async function analyzePdfAction(formData, deckId = null) {
     let file, fileName, filePath;
 
     if (deckId) {
-      //Edit
       deck = await prisma.deck.findUnique({ where: { id: deckId } });
       if (!deck) throw new Error("Deck not found.");
       fileName = deck.fileName;
@@ -39,9 +38,9 @@ export async function analyzePdfAction(formData, deckId = null) {
         },
       });
     } else {
-      // Create
       file = formData.get("file");
-      if (!file) return "Gagal: File tidak ditemukan.";
+      if (!file)
+        return { success: false, error: "Gagal: File tidak ditemukan." };
 
       const { uniqueFileName, path } = await uploadToR2(file);
       fileName = uniqueFileName;
@@ -57,7 +56,6 @@ export async function analyzePdfAction(formData, deckId = null) {
       });
     }
 
-    // Trigger AI analysis task
     const response = await analyzeAiTask.trigger({
       deckId: deck.id,
       filePath,
@@ -69,8 +67,11 @@ export async function analyzePdfAction(formData, deckId = null) {
 
     revalidatePath("/dashboard");
 
-    console.log("response final", response);
-    return response;
+    return {
+      success: true,
+      message: "Pitch deck berhasil diproses.",
+      response,
+    };
   } catch (error) {
     console.error(" Error in analyzePdfAction:", error);
     if (deck?.id) {
@@ -79,7 +80,10 @@ export async function analyzePdfAction(formData, deckId = null) {
         data: { status: "FAILED" },
       });
     }
-    return "❌ Terjadi kesalahan saat memproses pitch deck.";
+    return {
+      success: false,
+      error: "Terjadi kesalahan saat memproses pitch deck.",
+    };
   }
 }
 export async function uploadToR2(file) {
