@@ -1,12 +1,5 @@
 import Link from "next/link";
-import {
-  CircleUser,
-  LogOut,
-  Home,
-  User,
-  CreditCard,
-  BarChart3,
-} from "lucide-react";
+import { CircleUser, LogOut, Home, CreditCard } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -23,7 +16,7 @@ import { logoutAction } from "../(auth)/action";
 export default function Layout({ children }) {
   return (
     <main className="flex h-screen bg-gray-50 font-main">
-      <aside className="w-56 bg-blue-600 border-r border-gray-200 flex flex-col shadow-sm">
+      <aside className="w-56 bg-blue-600 border-r border-gray-200 flex flex-col justify-between shadow-sm">
         <div className="p-6">
           <h1 className="text-2xl font-bold text-white">PitchIQ</h1>
           <p className="text-sm text-white mt-1">AI Pitch Analyzer</p>
@@ -40,29 +33,6 @@ export default function Layout({ children }) {
               />
               <span className="font-medium">Dashboard</span>
             </Link>
-
-            <Link
-              href="/profile"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white hover:bg-blue-50 hover:text-blue-600 transition-colors group"
-            >
-              <User
-                className="h-5 w-5 group-hover:text-blue-600"
-                strokeWidth={2}
-              />
-              <span className="font-medium">Profile</span>
-            </Link>
-
-            <Link
-              href="/analytics"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white hover:bg-blue-50 hover:text-blue-600 transition-colors group"
-            >
-              <BarChart3
-                className="h-5 w-5 group-hover:text-blue-600"
-                strokeWidth={2}
-              />
-              <span className="font-medium">Analytics</span>
-            </Link>
-
             <Link
               href="/payment"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white hover:bg-blue-50 hover:text-blue-600 transition-colors group"
@@ -78,7 +48,7 @@ export default function Layout({ children }) {
         <div className="p-4 space-y-2">
           <Link
             href="/profile"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white hover:bg-gray-100 hover:text-blue-600 transition-colors group"
           >
             <CircleUser className="h-5 w-5" strokeWidth={2} />
             <span className="font-medium">My Account</span>
@@ -87,7 +57,7 @@ export default function Layout({ children }) {
             <AlertDialogTrigger asChild>
               <Button
                 variant="ghost"
-                className="w-full justify-start gap-3 px-3 py-2.5 h-auto text-white hover:bg-red-50 hover:text-red-600 transition-colors"
+                className="w-full justify-start gap-3 px-3 py-2.5 h-auto text-white hover:bg-red-50 hover:text-red-600 transition-colors group"
               >
                 <LogOut className="h-5 w-5" strokeWidth={2} />
                 <span className="font-medium">Logout</span>

@@ -19,20 +19,20 @@ export async function loginAction(formData) {
   const password = formData.get("password");
 
   if (!email || !password) {
-    return { error: "Email dan password dibutuhkan" };
+    return { success: false, error: "Email dan password dibutuhkan" };
   }
 
   const getWithPassword = true;
   const user = await getUserByEmail(email, getWithPassword);
 
   if (!user) {
-    return { error: "User tidak ditemukan" };
+    return { success: false, error: "User tidak ditemukan" };
   }
 
   const isPasswordValid = await verifyPassword(password, user.password);
 
   if (!isPasswordValid) {
-    return { error: "Password tidak valid" };
+    return { success: false, error: "Password tidak valid" };
   }
 
   const session = await createSession(user.id);
@@ -52,17 +52,17 @@ export async function registerAction(formData) {
   const password = formData.get("password");
 
   if (!name || !email || !password) {
-    return { error: "Nama, email, dan password dibutuhkan" };
+    return { success: false, error: "Nama, email, dan password dibutuhkan" };
   }
 
   const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
-    return { error: "User sudah terdaftar" };
+    return { success: false, error: "User sudah terdaftar" };
   }
 
   const user = await createUser(name, email, password);
-  return { success: "User berhasil terdaftar", user };
+  return { success: true, message: "User berhasil terdaftar", user };
 }
 
 export async function logoutAction() {
