@@ -48,9 +48,9 @@ export default function DeleteDeckButton({ deckId, deckName }) {
         <AlertDialogHeader>
           <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
           <AlertDialogDescription>
-            Yakin mau hapus deck <strong>"{deckName}"</strong>? 
+            Are you sure to delete <strong>"{deckName}"</strong>? 
             <br />
-            Semua data analysis akan ikut terhapus dan tidak bisa dikembalikan.
+            All analysis data will be deleted and cannot be recovered.
           </AlertDialogDescription>
         </AlertDialogHeader>
         
