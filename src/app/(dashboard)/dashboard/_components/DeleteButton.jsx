@@ -15,6 +15,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export default function DeleteDeckButton({ deckId, deckName }) {
   const [loading, setLoading] = useState(false);
