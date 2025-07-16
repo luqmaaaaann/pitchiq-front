@@ -23,7 +23,6 @@ export default defineConfig({
   build: {
     extensions: [
       prismaExtension({
-        version: "5.19.0", // optional, we'll automatically detect the version if not provided
         schema: "prisma/schema.prisma",
       }),
     ],
