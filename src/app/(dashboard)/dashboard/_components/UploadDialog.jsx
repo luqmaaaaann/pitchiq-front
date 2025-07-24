@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FileUp } from "lucide-react";
 import { Plus } from "lucide-react";
 import { analyzePdfAction } from "@/app/pitchdeck/action-ai";
+import { toast } from "sonner";
 
 export default function UploadDialog() {
   const [file, setFile] = useState(null);
@@ -45,6 +46,12 @@ export default function UploadDialog() {
     const formData = new FormData(e.target);
     const result = await analyzePdfAction(formData);
     console.log(result);
+
+    if (result.success) {
+      toast.success("Pitchdeck uploaded successfully");
+    } else {
+      toast.error("Failed to upload pitchdeck");
+    }
 
     setTimeout(() => {
       window.location.reload();

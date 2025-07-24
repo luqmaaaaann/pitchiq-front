@@ -1,8 +1,5 @@
 import { logger, task, wait } from "@trigger.dev/sdk/v3";
-
 import { openai } from "@/lib/openai";
-import prisma from "@/lib/prisma";
-import { createAnalysis } from "../services/analysis";
 
 export const analyzeAiTask = task({
   id: "analyze-pitchdeck",
@@ -12,6 +9,13 @@ export const analyzeAiTask = task({
 
     const { deckId, filePath, fileName, startupName, industry, summaryInput } =
       payload;
+
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? "https://pitchiq-rosy.vercel.app"
+        : "http://localhost:3000";
+
+    logger.log("🌐 Using baseUrl:", baseUrl);
 
     try {
       logger.log("📥 Fetching file for AI analysis");
@@ -72,26 +76,41 @@ Return only JSON:
 
       if (isNaN(overallScore)) throw new Error("Invalid score");
 
-      // Delete previous analysis (if exists)
-      await prisma.analysis.deleteMany({ where: { deckId } });
+      logger.log("🗑️ Deleting previous analysis via API");
+      // Delete previous analysis via API
+      await fetch(`${baseUrl}/api/deck-operations?deckId=${deckId}`, {
+        method: "DELETE",
+      });
 
-      // Create analysis
-      await createAnalysis({ deckId, overallScore, response: parsed });
+      logger.log("💾 Creating new analysis via API");
+      // Create analysis via API
+      await fetch(`${baseUrl}/api/deck-operations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deckId, overallScore, response: parsed }),
+      });
 
-      // Mark as completed
-      await prisma.deck.update({
-        where: { id: deckId },
-        data: { status: "COMPLETED" },
+      logger.log("✅ Updating deck status to COMPLETED via API");
+      // Mark as completed via API
+      await fetch(`${baseUrl}/api/deck-operations`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deckId, status: "COMPLETED" }),
       });
 
       logger.log("✅ Analysis saved, ini parsed", parsed);
       return parsed.summary;
     } catch (err) {
       logger.error("❌ Failed to analyze deck", err);
-      await prisma.deck.update({
-        where: { id: payload.deckId },
-        data: { status: "FAILED" },
+
+      // Update status to FAILED via API
+      await fetch(`${baseUrl}/api/deck-operations`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deckId, status: "FAILED" }),
       });
+
+      throw err;
     }
   },
 
@@ -99,6 +118,6 @@ Return only JSON:
     logger.log("AI Analysis generated", { payload, ctx });
   },
   onError: async (payload, { ctx }) => {
-    logger.log("AI Analysis  failed", { payload, ctx });
+    logger.log("AI Analysis failed", { payload, ctx });
   },
 });

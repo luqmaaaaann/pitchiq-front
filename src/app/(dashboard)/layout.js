@@ -57,7 +57,7 @@ export default function Layout({ children }) {
             <AlertDialogTrigger asChild>
               <Button
                 variant="ghost"
-                className="w-full justify-start gap-3 px-3 py-2.5 h-auto text-white hover:bg-red-50 hover:text-red-600 transition-colors group"
+                className="w-full justify-start cursor-pointer gap-3 px-3 py-2.5 h-auto text-white hover:bg-red-50 hover:text-red-600 transition-colors group"
               >
                 <LogOut className="h-5 w-5" strokeWidth={2} />
                 <span className="font-medium">Logout</span>
@@ -72,7 +72,9 @@ export default function Layout({ children }) {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel className="cursor-pointer">
+                  Cancel
+                </AlertDialogCancel>
                 <form action={logoutAction}>
                   <Button variant="destructive" className="cursor-pointer">
                     Logout
